@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN" "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<!-- 是否显示详细错误信息 -->
+	<!-- 开发模式下使用,这样可以打印出更详细的错误信息 --> 
+	<constant name="struts.devMode" value="true" />
+	<!-- 国际化资源文件名称 -->
+	<constant name="struts.custom.i18n.resources" value="i18n" />
+	<!-- 是否自动加载国际化资源文件  -->
+	<constant name="struts.i18n.reload" value="false" />
+	<!-- convention类重新加载 -->
+    <!-- 当struts的配置文件修改后,系统是否自动重新加载该文件,默认值为false(生产环境下使用),开发阶段最好打开 -->   
+	<constant name="struts.convention.classes.reload" value="true" />
+	<!-- 浏览器是否缓存静态内容 -->
+	<!-- 设置浏览器是否缓存静态内容,默认值为true(生产环境下使用),开发阶段最好关闭 --> 
+	<constant name="struts.serve.static.browserCache" value="true" />
+	<!-- 配置使用Spring管理Action -->
+	<constant name="struts.objectFactory" value="spring" />
+	<!-- 上传文件大小限制设置 -->
+	<constant name="struts.multipart.maxSize" value="-1" />
+	<!-- 允许struts2标签调用静态的类方法以及属性 -->
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
+	<!-- 解决spring aop 注解 后 spring无法注入到struts2的问题  -->
+	<constant name="struts.objectFactory.spring.autoWire.alwaysRespect" value="true" />  
+	<!-- 解决maven 打包后 action 注解无效问题 -->
+    <constant name="struts.convention.action.disableJarScanning" value="true" />
+    <constant name="struts.convention.action.fileProtocols" value="jar,wsjar" />
+   <!--  <constant name="struts.convention.action.includeJars" value=".*?/jxw*.*?jar(!/)?" /> -->
+   
+
+	<!-- 主题 -->
+	<!-- 默认的视图主题 -->   
+	<constant name="struts.ui.theme" value="simple" />
+	<!-- 编码 -->
+	 <!-- 指定Web应用的默认编码集,相当于调用HttpServletRequest的setCharacterEncoding方法 -->   
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<!-- 后缀 -->
+	    <!--    
+         该属性指定需要Struts 2处理的请求后缀，该属性的默认值是action，即所有匹配*.action的请求都由Struts2处理。    
+         如果用户需要指定多个请求后缀，则多个后缀之间以英文逗号（,）隔开。    
+     -->   
+	<constant name="struts.action.extension" value="action" />
+  
+	<!-- 结果资源的路径 不设置的话 默认都在web-inf/content下 -->
+	<constant name="struts.convention.result.path" value="/jsp/" />
+	
+	<!--所有Action后缀的java类才被映射为action
+	<constant name="struts.convention.action.suffix" value="Action"/>
+
+	<constant name="struts.convention.action.mapAllMatches" value="true"/>
+
+-->
+	
+	<!-- URL资源分隔符 -->
+	<!-- struts.convention.action.name.separator=
+
+这个属性是约定当一个Java 类 有多个单词组合成的时候，映射的URL地址的时候访问的格式的分隔符。
+
+如果不指定这个属性，Struts默认的分隔符是 “-”，例如 HelloWorldAction 则访问的URL 是Hello-World.action
+
+如果指定这个属性是上面的格式，则是没有分隔符，会按照Java 类名直接映射，例如 HelloWorldAction 则访问的URL 是HelloWorld.action
+	 -->
+	<!-- <constant name="struts.convention.action.name.separator" value="_" /> -->
+	
+	<bean type="org.apache.struts2.convention.ActionNameBuilder" name="defaultConvention" class="org.apache.struts2.convention.DefaultActionNameBuilder"/>
+       <constant name="struts.convention.actionNameBuilder" value="defaultConvention"/>
+	
+	<package name="basePackage" extends="struts-default">
+		<interceptors>
+			 <!-- 异常拦截器 -->
+			<interceptor  class="com.bsi.summer.core.interceptor.ExceptionHandler"  name="exceptionInterceptor"/>
+			<!-- ajax异常拦截器 方法级的 -->
+			<interceptor  class="com.bsi.summer.core.interceptor.JsonAjaxExceptionHandler"  name="jsonExceptionInterceptor"/>
+			<!-- filter参数拦截器-->
+			<interceptor  class="com.bsi.summer.core.interceptor.ParamsFilterHandler"  name="paramsFilterInterceptor"/>
+			<!-- struts2中的字符串数组到对象数组的自动装配
+			<interceptor class="com.bsi.summer.cfg.interceptor.ObjectInterceptor" name="objectArrayInterceptor"/>	-->
+								
+				<interceptor-stack name="baseStack">
+                <interceptor-ref name="exception" />
+                <interceptor-ref name="alias" />
+                <interceptor-ref name="servletConfig" />
+                <interceptor-ref name="i18n" />
+                <interceptor-ref name="prepare" />
+                <interceptor-ref name="chain" />
+                <interceptor-ref name="debugging" />
+                <interceptor-ref name="scopedModelDriven" />
+                <interceptor-ref name="modelDriven" />
+                <interceptor-ref name="fileUpload" />
+                <interceptor-ref name="checkbox" />
+                <interceptor-ref name="multiselect" />
+                <interceptor-ref name="staticParams" />
+                <interceptor-ref name="actionMappingParams" />
+				<interceptor-ref name="paramsFilterInterceptor"/>
+				<interceptor-ref name="exceptionInterceptor"/>
+				<interceptor-ref name="jsonExceptionInterceptor">
+				<param name="includeMethods ">ajax*,*Ajax</param> 
+				</interceptor-ref>
+				<!--  <interceptor-ref name="objectArrayInterceptor"/> -->
+                <interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*</param>
+                </interceptor-ref>
+                <interceptor-ref name="conversionError"/>
+                <!-- 配置方法级别的校验 -->
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                    <param name="validateAnnotatedMethodOnly">true</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+            </interceptor-stack>
+            
+            <interceptor-stack name="xTokenStack">
+				<interceptor-ref name="baseStack"/>
+				<interceptor-ref name="token"/>
+			</interceptor-stack>
+			
+		</interceptors>
+
+		<!-- 配置默认拦截器栈 -->
+		<default-interceptor-ref name="baseStack" />
+
+		<!-- 未到找Action指向页面 -->
+		<default-action-ref name="errorPage" />
+	<action name="*">
+     <result>/{1}.jsp</result>
+	  <result name="input">/{1}.jsp</result>
+  	</action>
+		<action name="errorPage">
+			<result type="redirect">/html/error_page_404.html</result>
+	</action>
+	</package>
+	
+	<!-- 
+	<include file="struts_einfo.xml" />
+	 -->
+</struts>

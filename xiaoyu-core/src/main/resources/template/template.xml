@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<summer>
+	<description>SUMMER模板配置文件</description>
+	<autoJava>
+		<action>
+			<description>action</description>
+			<templateFilePath>/template/java/action.ftl</templateFilePath>
+		</action>
+		<dao>
+			<description>DAO接口</description>
+			<templateFilePath>/template/java/dao.ftl</templateFilePath>
+		</dao>
+		<daoImpl>
+			<description>DAO实现</description>
+			<templateFilePath>/template/java/daoImpl.ftl</templateFilePath>
+		</daoImpl>
+		<service>
+			<description>service接口</description>
+			<templateFilePath>/template/java/service.ftl</templateFilePath>
+		</service>
+		<serviceImpl>
+			<description>service实现</description>
+			<templateFilePath>/template/java/serviceImpl.ftl</templateFilePath>
+		</serviceImpl>
+	</autoJava>
+	<autoJsp>
+		<list>
+			<description>老版list</description>
+			<templateFilePath>/template/jsp/list.ftl</templateFilePath>
+		</list>
+	</autoJsp>
+</summer>

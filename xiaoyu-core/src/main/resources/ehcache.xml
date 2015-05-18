@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache name="summer">
+   <defaultCache
+      maxElementsInMemory="1000"
+      eternal="false"
+      timeToIdleSeconds="3600"
+      timeToLiveSeconds="3600"
+      overflowToDisk="false">
+    </defaultCache>
+
+   <cache name=" com.bsi.summer.cfg.entity.Stable"
+      maxElementsInMemory="2000"
+      eternal="false"
+      timeToIdleSeconds="3600"
+      timeToLiveSeconds="3600"
+      overflowToDisk="false">
+    </cache>
+</ehcache>
